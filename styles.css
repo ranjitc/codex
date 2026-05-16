@@ -61,6 +61,49 @@ main {
   font-size: 12px;
 }
 
+.demo-chat-shell {
+  position: fixed;
+  z-index: 4;
+  left: clamp(10px, 2vw, 24px);
+  bottom: clamp(10px, 2vw, 24px);
+  width: min(370px, calc(100vw - 24px));
+  background: rgba(10, 14, 28, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.4);
+}
+
+.demo-chat-shell header {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 12px 14px;
+}
+
+.demo-chat-log {
+  max-height: 180px;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.chat-bubble {
+  margin: 0;
+  width: fit-content;
+  max-width: 96%;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 9px 11px;
+  border-radius: 12px 12px 12px 4px;
+  background: rgba(163, 196, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
 .panel {
   min-height: 95vh;
   padding: clamp(24px, 8vw, 96px);
