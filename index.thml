@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Real Estate 3D Scroll Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="video-shell" aria-hidden="true">
+    <video id="bgVideo" muted playsinline preload="auto">
+      <source src="https://media.istockphoto.com/id/1908736020/video/dubai-marina.mp4" type="video/mp4" />
+    </video>
+    <div class="video-overlay"></div>
+  </div>
+
+  <nav class="section-nav" aria-label="Section navigation">
+    <a href="#hero-layer">1</a>
+    <a href="#feature-row-one">2</a>
+    <a href="#center-layer">3</a>
+    <a href="#feature-row-two">4</a>
+    <a href="#end-layer">5</a>
+  </nav>
+
+  <main>
+    <section class="panel hero" id="hero-layer">
+      <p class="kicker">Luxury Listing Showcase</p>
+      <h1>Lorem ipsum dolor sit amet,<br />consectetur adipiscing elit.</h1>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
+    </section>
+
+    <section class="panel two-col" id="feature-row-one">
+      <article class="card" id="feature-copy">
+        <h2>Lorem ipsum dolor</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor.</p>
+      </article>
+      <article class="card image-card" id="feature-image-one">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" alt="Modern house exterior" />
+      </article>
+    </section>
+
+    <section class="panel center" id="center-layer">
+      <h2>Lorem ipsum sit amet</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed odio dui.</p>
+    </section>
+
+    <section class="panel two-col" id="feature-row-two">
+      <article class="card image-card" id="feature-image-two">
+        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80" alt="Modern living room interior" />
+      </article>
+      <article class="card" id="feature-copy-two">
+        <h2>Lorem ipsum</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
+      </article>
+    </section>
+
+    <section class="panel end" id="end-layer">
+      <h2>Lorem ipsum finale</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum id ligula porta felis euismod semper.</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
