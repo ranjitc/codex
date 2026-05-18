@@ -3,6 +3,8 @@ gsap.registerPlugin(ScrollTrigger);
 const video = document.querySelector('.video-background');
 const progressBar = document.getElementById('prog');
 const overlay = document.getElementById('overlay');
+const parallaxSections = gsap.utils.toArray('.panel');
+const parallaxCards = gsap.utils.toArray('.card');
 const sourceUrl = video.currentSrc || video.src;
 const sourceNotice = document.createElement('div');
 
@@ -43,6 +45,42 @@ const timeline = gsap.timeline({
       overlay.style.background = `rgba(6,8,16,${0.32 + self.progress * 0.3})`;
     },
   },
+});
+
+parallaxSections.forEach((section, index) => {
+  const depth = index % 2 === 0 ? -8 : -5;
+  gsap.fromTo(
+    section,
+    { yPercent: 0 },
+    {
+      yPercent: depth,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      },
+    },
+  );
+});
+
+parallaxCards.forEach((card, index) => {
+  const depth = index % 2 === 0 ? -14 : -10;
+  gsap.fromTo(
+    card,
+    { yPercent: 0 },
+    {
+      yPercent: depth,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: card,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      },
+    },
+  );
 });
 
 once(video, 'loadedmetadata', () => {
