@@ -37,3 +37,12 @@ ffmpeg -i input.mov \
 
 - Export a second, lower-resolution asset for mobile and switch by media query/device class.
 - Keep scroll snapping relaxed (`proximity`) so snap physics do not fight scrub interpolation.
+
+## GitHub Pages video troubleshooting
+
+If the video works locally but not on GitHub Pages:
+
+- Verify the file exists on the **published branch** (`main` or `gh-pages`) at the exact path used in HTML (`./dubai-marina-scrub.mp4`).
+- Check filename case exactly (`Dubai-Marina-Scrub.mp4` and `dubai-marina-scrub.mp4` are different on Pages).
+- Avoid Git LFS-only pointers for Pages-hosted assets; ensure the real binary is present in the published branch.
+- Keep MP4 MIME-compatible source tags and provide a fallback source.

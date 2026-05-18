@@ -4,6 +4,20 @@ const video = document.querySelector('.video-background');
 const progressBar = document.getElementById('prog');
 const overlay = document.getElementById('overlay');
 const sourceUrl = video.currentSrc || video.src;
+const sourceNotice = document.createElement('div');
+
+sourceNotice.className = 'source-notice';
+sourceNotice.hidden = true;
+sourceNotice.textContent = 'Video source failed to load. Confirm dubai-marina-scrub.mp4 is committed to the published branch (not Git LFS-only) or keep the fallback CDN source.';
+document.body.appendChild(sourceNotice);
+
+video.addEventListener('error', () => {
+  sourceNotice.hidden = false;
+});
+
+video.addEventListener('loadeddata', () => {
+  sourceNotice.hidden = true;
+});
 
 function once(el, event, fn) {
   const wrap = (e) => {
@@ -41,7 +55,13 @@ once(video, 'loadedmetadata', () => {
 
 setTimeout(() => {
   if (!window.fetch) return;
-  fetch(sourceUrl)
+  if (!sourceUrl) return;
+
+  const parsed = new URL(sourceUrl, window.location.href);
+  const isSameOrigin = parsed.origin === window.location.origin;
+  if (!isSameOrigin) return;
+
+  fetch(parsed.href)
     .then((response) => response.blob())
     .then((blob) => {
       const blobUrl = URL.createObjectURL(blob);

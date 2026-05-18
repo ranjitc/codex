@@ -143,6 +143,12 @@ footer{
 .reveal{opacity:0;transform:translateY(30px);transition:opacity .85s ease,transform .85s ease}
 .reveal.in{opacity:1;transform:none}
 
+.source-notice{
+  position:fixed;left:16px;right:16px;bottom:16px;z-index:600;
+  background:rgba(6,8,16,.92);border:1px solid rgba(201,169,110,.45);
+  color:var(--gold-l);padding:10px 12px;font-size:.62rem;letter-spacing:.06em;
+}
+
 @keyframes up{to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{
   0%{transform:scaleY(0);transform-origin:top}
