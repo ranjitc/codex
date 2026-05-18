@@ -48,10 +48,10 @@ nav{
 }
 .nav-links a:hover{opacity:1;color:var(--gold)}
 
-#container{position:relative;height:600vh;z-index:2}
+#container{position:relative;min-height:100vh;z-index:2}
 
 #hero{
-  position:sticky;top:0;height:100vh;
+  position:relative;min-height:100vh;
   display:flex;flex-direction:column;justify-content:flex-end;
   padding:0 60px 90px;pointer-events:none;
 }

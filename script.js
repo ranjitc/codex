@@ -36,7 +36,7 @@ once(document.documentElement, 'touchstart', () => {
 const timeline = gsap.timeline({
   defaults: { duration: 1 },
   scrollTrigger: {
-    trigger: '#container',
+    trigger: document.body,
     start: 'top top',
     end: 'bottom bottom',
     scrub: true,
