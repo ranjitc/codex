@@ -7,6 +7,7 @@ const parallaxSections = gsap.utils.toArray('.panel');
 const parallaxCards = gsap.utils.toArray('.card');
 const sourceUrl = video.currentSrc || video.src;
 const sourceNotice = document.createElement('div');
+let scrubBound = false;
 
 sourceNotice.className = 'source-notice';
 sourceNotice.hidden = true;
@@ -29,9 +30,13 @@ function once(el, event, fn) {
   el.addEventListener(event, wrap, { passive: true });
 }
 
-once(document.documentElement, 'touchstart', () => {
+function primeVideoPlayback() {
   video.play().then(() => video.pause()).catch(() => {});
-});
+}
+
+once(document.documentElement, 'touchstart', primeVideoPlayback);
+once(document.documentElement, 'pointerdown', primeVideoPlayback);
+once(document.documentElement, 'wheel', primeVideoPlayback);
 
 const timeline = gsap.timeline({
   defaults: { duration: 1 },
@@ -83,13 +88,22 @@ parallaxCards.forEach((card, index) => {
   );
 });
 
-once(video, 'loadedmetadata', () => {
+function bindScrubTimeline() {
+  if (scrubBound) return;
+  if (!video.duration || Number.isNaN(video.duration)) return;
+
+  scrubBound = true;
   timeline.fromTo(
     video,
     { currentTime: 0 },
-    { currentTime: video.duration || 1 },
+    { currentTime: Math.max(0.01, video.duration - 0.01) },
   );
-});
+  ScrollTrigger.refresh();
+}
+
+video.addEventListener('loadedmetadata', bindScrubTimeline);
+video.addEventListener('canplay', bindScrubTimeline);
+video.load();
 
 setTimeout(() => {
   if (!window.fetch) return;
