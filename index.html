@@ -1,65 +1,90 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Real Estate 3D Scroll Demo</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Readeste — Where Dubai Lives</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="video-shell" aria-hidden="true">
-    <video id="bgVideo" muted playsinline preload="auto">
-      <source src="https://media.istockphoto.com/id/1908736020/video/dubai-marina.mp4" type="video/mp4" />
-    </video>
-    <div class="video-overlay"></div>
-  </div>
+  <video class="video-background" src="dubai-marina-scrub.mp4" playsinline muted preload="auto"></video>
 
-  <nav class="section-nav" aria-label="Section navigation">
-    <a href="#hero-layer">1</a>
-    <a href="#feature-row-one">2</a>
-    <a href="#center-layer">3</a>
-    <a href="#feature-row-two">4</a>
-    <a href="#end-layer">5</a>
+  <div id="overlay"></div>
+  <div id="prog" aria-hidden="true"></div>
+
+  <nav>
+    <div class="logo">Readeste</div>
+    <ul class="nav-links">
+      <li><a href="#">Properties</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
   </nav>
 
-  <main>
-    <section class="panel hero" id="hero-layer">
-      <p class="kicker">Luxury Listing Showcase</p>
-      <h1>Lorem ipsum dolor sit amet,<br />consectetur adipiscing elit.</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.</p>
-    </section>
+  <div id="container">
+    <div id="hero">
+      <p class="eyebrow">Dubai's Premier Residences</p>
+      <h1 class="hero-h1">Live above<br>the <em>ordinary</em></h1>
+      <p class="hero-sub">Curated ultra-luxury properties across Dubai Marina, Palm Jumeirah & Downtown — where every address is a statement.</p>
+      <div class="hero-cta"><a href="#features" class="btn">Explore Properties</a></div>
+      <div class="scroll-cue">Scroll to explore</div>
+    </div>
+  </div>
 
-    <section class="panel two-col" id="feature-row-one">
-      <article class="card" id="feature-copy">
-        <h2>Lorem ipsum dolor</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur blandit tempus porttitor.</p>
-      </article>
-      <article class="card image-card" id="feature-image-one">
-        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" alt="Modern house exterior" />
-      </article>
-    </section>
+  <section id="features" class="panel">
+    <p class="sec-tag reveal">What We Offer</p>
+    <h2 class="sec-title reveal">An unmatched portfolio across Dubai's most coveted addresses</h2>
+    <div class="cards">
+      <div class="card reveal">
+        <div class="card-num">01</div>
+        <div class="card-title">Waterfront Living</div>
+        <p class="card-desc">Premium apartments & penthouses with unobstructed marina and sea views, curated for those who demand nothing less.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-num">02</div>
+        <div class="card-title">Private Concierge</div>
+        <p class="card-desc">A dedicated advisor from first inquiry to handover — and beyond. White-glove service at every stage of your journey.</p>
+      </div>
+      <div class="card reveal">
+        <div class="card-num">03</div>
+        <div class="card-title">Investment Intelligence</div>
+        <p class="card-desc">Proprietary market data and ROI analysis across all Dubai micro-markets, updated in real time for smart decisions.</p>
+      </div>
+    </div>
+  </section>
 
-    <section class="panel center" id="center-layer">
-      <h2>Lorem ipsum sit amet</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sed odio dui.</p>
-    </section>
+  <section id="stats" class="panel">
+    <div class="sg">
+      <div class="stat reveal"><span class="stat-n">AED 4.2B+</span><span class="stat-l">Transactions Closed</span></div>
+      <div class="sdiv"></div>
+      <div class="stat reveal"><span class="stat-n">1,800+</span><span class="stat-l">Properties Sold</span></div>
+      <div class="sdiv"></div>
+      <div class="stat reveal"><span class="stat-n">97%</span><span class="stat-l">Client Retention</span></div>
+      <div class="sdiv"></div>
+      <div class="stat reveal"><span class="stat-n">14 Yrs</span><span class="stat-l">In Dubai Market</span></div>
+    </div>
+  </section>
 
-    <section class="panel two-col" id="feature-row-two">
-      <article class="card image-card" id="feature-image-two">
-        <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80" alt="Modern living room interior" />
-      </article>
-      <article class="card" id="feature-copy-two">
-        <h2>Lorem ipsum</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.</p>
-      </article>
-    </section>
+  <section id="cta" class="panel">
+    <p class="cta-tag reveal">Begin Your Journey</p>
+    <h2 class="cta-h2 reveal">Your next<br><em>home awaits</em></h2>
+    <div class="gold-rule"></div>
+    <p class="cta-sub reveal">Schedule a private consultation and discover properties that match your vision — before they reach the market.</p>
+    <div class="cta-btns reveal">
+      <a href="#" class="btn">Book a Consultation</a>
+      <a href="#" class="btn btn-g">View Listings</a>
+    </div>
+  </section>
 
-    <section class="panel end" id="end-layer">
-      <h2>Lorem ipsum finale</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum id ligula porta felis euismod semper.</p>
-    </section>
-  </main>
+  <footer>
+    <span class="footer-logo">Readeste</span>
+    <span class="footer-copy">© 2026 Readeste. All rights reserved. Dubai, UAE.</span>
+  </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
