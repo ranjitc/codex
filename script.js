@@ -1,96 +1,66 @@
-const video = document.getElementById('bgVideo');
-const chatLog = document.getElementById('demoChatLog');
+gsap.registerPlugin(ScrollTrigger);
 
-const layerDepthById = {
-  'hero-layer': 0.08,
-  'feature-row-one': 0.12,
-  'feature-copy': 0.22,
-  'feature-image-one': 0.27,
-  'center-layer': 0.11,
-  'feature-row-two': 0.12,
-  'feature-image-two': 0.24,
-  'feature-copy-two': 0.2,
-  'end-layer': 0.06,
-};
+const video = document.querySelector('.video-background');
+const progressBar = document.getElementById('prog');
+const overlay = document.getElementById('overlay');
+const sourceUrl = video.currentSrc || video.src;
 
-let videoDuration = 0;
-let lastChatIndex = -1;
-
-const chatBeats = [
-  { progress: 0.06, text: '👋 Welcome! Scroll to scrub through the neighborhood flythrough.' },
-  { progress: 0.23, text: '🏠 This elevation uses layered cards to create a 3D depth feel.' },
-  { progress: 0.43, text: '🌇 Midway point: your scroll position is now steering the background video.' },
-  { progress: 0.66, text: '🛋️ Interior highlight: copy and media are offset with separate parallax rates.' },
-  { progress: 0.87, text: '✅ End scene reached. Scroll up to replay and compare section pacing.' },
-];
-
-function syncChat(progress) {
-  if (!chatLog) return;
-
-  let nextIndex = -1;
-  for (let i = 0; i < chatBeats.length; i += 1) {
-    if (progress >= chatBeats[i].progress) nextIndex = i;
-  }
-
-  if (nextIndex === lastChatIndex) return;
-  lastChatIndex = nextIndex;
-  renderChat(nextIndex);
+function once(el, event, fn) {
+  const wrap = (e) => {
+    el.removeEventListener(event, wrap);
+    fn.call(el, e);
+  };
+  el.addEventListener(event, wrap, { passive: true });
 }
 
-function renderChat(activeIndex) {
-  if (!chatLog) return;
-
-  chatLog.innerHTML = '';
-  const visible = chatBeats.slice(0, activeIndex + 1);
-  visible.forEach((beat) => {
-    const bubble = document.createElement('p');
-    bubble.className = 'chat-bubble';
-    bubble.textContent = beat.text;
-    chatLog.appendChild(bubble);
-  });
-}
-
-function initGsapScroll() {
-  if (!window.gsap || !window.ScrollTrigger || !videoDuration) return;
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  gsap.to(video, {
-    currentTime: videoDuration,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: document.body,
-      start: 'top top',
-      end: 'bottom bottom',
-      scrub: 1.2,
-      onUpdate: ({ progress }) => syncChat(progress),
-    },
-  });
-
-  Object.entries(layerDepthById).forEach(([id, depth]) => {
-    const element = document.getElementById(id);
-    if (!element) return;
-
-    gsap.to(element, {
-      yPercent: -depth * 100,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: document.body,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 1,
-      },
-    });
-  });
-
-  ScrollTrigger.refresh();
-}
-
-video.addEventListener('loadedmetadata', () => {
-  videoDuration = Math.max(0, (video.duration || 0) - 0.05);
-  video.pause();
-  video.currentTime = 0;
-  initGsapScroll();
+once(document.documentElement, 'touchstart', () => {
+  video.play().then(() => video.pause()).catch(() => {});
 });
 
-renderChat(-1);
+const timeline = gsap.timeline({
+  defaults: { duration: 1 },
+  scrollTrigger: {
+    trigger: '#container',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: true,
+    onUpdate: (self) => {
+      progressBar.style.width = `${self.progress * 100}%`;
+      overlay.style.background = `rgba(6,8,16,${0.32 + self.progress * 0.3})`;
+    },
+  },
+});
+
+once(video, 'loadedmetadata', () => {
+  timeline.fromTo(
+    video,
+    { currentTime: 0 },
+    { currentTime: video.duration || 1 },
+  );
+});
+
+setTimeout(() => {
+  if (!window.fetch) return;
+  fetch(sourceUrl)
+    .then((response) => response.blob())
+    .then((blob) => {
+      const blobUrl = URL.createObjectURL(blob);
+      const current = video.currentTime;
+      once(document.documentElement, 'touchstart', () => {
+        video.play().then(() => video.pause()).catch(() => {});
+      });
+      video.src = blobUrl;
+      video.currentTime = current + 0.001;
+    })
+    .catch(() => {
+      console.info('Blob fetch failed, using direct src. Host video on same origin or CORS-enabled CDN for best reverse scrub.');
+    });
+}, 1000);
+
+document.querySelectorAll('.reveal').forEach((el) => {
+  new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    const siblings = [...entry.target.parentElement.querySelectorAll('.reveal')];
+    setTimeout(() => el.classList.add('in'), siblings.indexOf(el) * 140);
+  }, { threshold: 0.1 }).observe(el);
+});
