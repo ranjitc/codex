@@ -1,79 +1,86 @@
-const video = document.getElementById('bgVideo');
+gsap.registerPlugin(ScrollTrigger);
 
-const layerDepthById = {
-  'hero-layer': 0.08,
-  'feature-row-one': 0.12,
-  'feature-copy': 0.22,
-  'feature-image-one': 0.27,
-  'center-layer': 0.11,
-  'feature-row-two': 0.12,
-  'feature-image-two': 0.24,
-  'feature-copy-two': 0.2,
-  'end-layer': 0.06,
-};
+const video = document.querySelector('.video-background');
+const progressBar = document.getElementById('prog');
+const overlay = document.getElementById('overlay');
+const sourceUrl = video.currentSrc || video.src;
+const sourceNotice = document.createElement('div');
 
-const SMOOTHING = 0.1;
-const SEEK_EPSILON = 0.008;
-const SCRUB_STEP_SECONDS = 1 / 30;
-const MAX_TIME_DELTA_PER_FRAME = 0.05;
+sourceNotice.className = 'source-notice';
+sourceNotice.hidden = true;
+sourceNotice.textContent = 'Video source failed to load. Confirm dubai-marina-scrub.mp4 is committed to the published branch (not Git LFS-only) or keep the fallback CDN source.';
+document.body.appendChild(sourceNotice);
 
-let videoDuration = 0;
-let targetTime = 0;
-let currentTime = 0;
-let rafId = null;
-
-video.addEventListener('loadedmetadata', () => {
-  videoDuration = video.duration || 0;
-  video.play().then(() => video.pause()).catch(() => {});
-  tick();
+video.addEventListener('error', () => {
+  sourceNotice.hidden = false;
 });
 
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value));
+video.addEventListener('loadeddata', () => {
+  sourceNotice.hidden = true;
+});
+
+function once(el, event, fn) {
+  const wrap = (e) => {
+    el.removeEventListener(event, wrap);
+    fn.call(el, e);
+  };
+  el.addEventListener(event, wrap, { passive: true });
 }
 
-function lerp(start, end, t) {
-  return start + (end - start) * t;
-}
+once(document.documentElement, 'touchstart', () => {
+  video.play().then(() => video.pause()).catch(() => {});
+});
 
-function snapToStep(value, step) {
-  return Math.round(value / step) * step;
-}
+const timeline = gsap.timeline({
+  defaults: { duration: 1 },
+  scrollTrigger: {
+    trigger: '#container',
+    start: 'top top',
+    end: 'bottom bottom',
+    scrub: true,
+    onUpdate: (self) => {
+      progressBar.style.width = `${self.progress * 100}%`;
+      overlay.style.background = `rgba(6,8,16,${0.32 + self.progress * 0.3})`;
+    },
+  },
+});
 
-function updateTargetsFromScroll() {
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = maxScroll > 0 ? clamp(window.scrollY / maxScroll, 0, 1) : 0;
+once(video, 'loadedmetadata', () => {
+  timeline.fromTo(
+    video,
+    { currentTime: 0 },
+    { currentTime: video.duration || 1 },
+  );
+});
 
-  if (videoDuration > 0) {
-    const rawTargetTime = progress * videoDuration;
-    targetTime = clamp(snapToStep(rawTargetTime, SCRUB_STEP_SECONDS), 0, videoDuration);
-  }
+setTimeout(() => {
+  if (!window.fetch) return;
+  if (!sourceUrl) return;
 
-  Object.entries(layerDepthById).forEach(([id, depth]) => {
-    const item = document.getElementById(id);
-    if (!item) return;
+  const parsed = new URL(sourceUrl, window.location.href);
+  const isSameOrigin = parsed.origin === window.location.origin;
+  if (!isSameOrigin) return;
 
-    const offset = window.scrollY * depth * -0.2;
-    item.style.transform = `translate3d(0, ${offset}px, 0)`;
-  });
-}
+  fetch(parsed.href)
+    .then((response) => response.blob())
+    .then((blob) => {
+      const blobUrl = URL.createObjectURL(blob);
+      const current = video.currentTime;
+      once(document.documentElement, 'touchstart', () => {
+        video.play().then(() => video.pause()).catch(() => {});
+      });
+      video.src = blobUrl;
+      video.currentTime = current + 0.001;
+    })
+    .catch(() => {
+      console.info('Blob fetch failed, using direct src. Host video on same origin or CORS-enabled CDN for best reverse scrub.');
+    });
+}, 1000);
 
-function tick() {
-  const smoothedTime = lerp(currentTime, targetTime, SMOOTHING);
-  const boundedDelta = clamp(smoothedTime - currentTime, -MAX_TIME_DELTA_PER_FRAME, MAX_TIME_DELTA_PER_FRAME);
-  currentTime += boundedDelta;
-
-  if (videoDuration > 0 && Math.abs(video.currentTime - currentTime) > SEEK_EPSILON) {
-    video.currentTime = clamp(currentTime, 0, videoDuration);
-  }
-
-  rafId = window.requestAnimationFrame(tick);
-}
-
-window.addEventListener('scroll', updateTargetsFromScroll, { passive: true });
-window.addEventListener('resize', updateTargetsFromScroll);
-
-updateTargetsFromScroll();
-if (!rafId) {
-  tick();
-}
+document.querySelectorAll('.reveal').forEach((el) => {
+  new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    const siblings = [...entry.target.parentElement.querySelectorAll('.reveal')];
+    setTimeout(() => el.classList.add('in'), siblings.indexOf(el) * 140);
+  }, { threshold: 0.1 }).observe(el);
+});
